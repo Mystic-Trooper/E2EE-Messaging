@@ -1,20 +1,42 @@
+import 'package:e2ee_messaging/socketio/Routes.dart';
+import 'package:e2ee_messaging/socketio/loginscreen.dart';
+import 'package:e2ee_messaging/splash.dart';
 import 'package:flutter/material.dart';
-
-import 'src/app.dart';
-import 'src/settings/settings_controller.dart';
-import 'src/settings/settings_service.dart';
+import 'package:animated_splash_screen/animated_splash_screen.dart';
 
 void main() async {
-  // Set up the SettingsController, which will glue user settings to multiple
-  // Flutter Widgets.
-  final settingsController = SettingsController(SettingsService());
+  runApp(const MyApp());
+}
 
-  // Load the user's preferred theme while the splash screen is displayed.
-  // This prevents a sudden theme change when the app is first displayed.
-  await settingsController.loadSettings();
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
 
-  // Run the app and pass in the SettingsController. The app listens to the
-  // SettingsController for changes, then passes it further down to the
-  // SettingsView.
-  runApp(MyApp(settingsController: settingsController));
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Chat App',
+      theme: ThemeData(
+        primarySwatch: Colors.purple,
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            primary: Colors.greenAccent,
+            shadowColor: Colors.amber,
+            onPrimary: Colors.black,
+          ),
+        ),
+        outlinedButtonTheme: OutlinedButtonThemeData(
+          style: OutlinedButton.styleFrom(
+              primary: Colors.black, backgroundColor: Colors.deepOrangeAccent),
+        ),
+      ),
+      routes: Routes.routes(),
+      home: AnimatedSplashScreen(
+        nextScreen: const LoginScreen(),
+        splash: const Splash(),
+        duration: 2000,
+        splashIconSize: double.maxFinite,
+      ),
+    );
+  }
 }
