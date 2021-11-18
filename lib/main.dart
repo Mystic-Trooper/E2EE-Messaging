@@ -1,5 +1,5 @@
 import 'package:e2ee_messaging/socketio/Routes.dart';
-import 'package:e2ee_messaging/socketio/loginscreen.dart';
+import 'package:e2ee_messaging/socketio/LoginScreen.dart';
 import 'package:e2ee_messaging/splash.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
@@ -9,7 +9,7 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
       ),
       routes: Routes.routes(),
       home: AnimatedSplashScreen(
-        nextScreen: const LoginScreen(),
+        nextScreen:  LoginScreen(),
         splash: const Splash(),
         duration: 2000,
         splashIconSize: double.maxFinite,
