@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
       ),
       routes: Routes.routes(),
       home: AnimatedSplashScreen(
-        nextScreen:  LoginScreen(),
+        nextScreen: LoginScreen(),
         splash: const Splash(),
         duration: 2000,
         splashIconSize: double.maxFinite,

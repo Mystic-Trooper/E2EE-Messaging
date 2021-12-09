@@ -12,6 +12,7 @@ class ChatMessageModel {
   int from;
   String message;
   String chatType;
+  String public_key;
   bool toUserOnlineStatus;
 
   ChatMessageModel({
@@ -20,6 +21,7 @@ class ChatMessageModel {
     this.from,
     this.message,
     this.chatType,
+    this.public_key,
     this.toUserOnlineStatus,
   });
 
@@ -30,6 +32,7 @@ class ChatMessageModel {
         from: json["from"],
         message: json["message"],
         chatType: json["chat_type"],
+        public_key: json["public_key"],
         toUserOnlineStatus: json['to_user_online_status'],
       );
 
@@ -39,5 +42,6 @@ class ChatMessageModel {
         "from": from,
         "message": message,
         "chat_type": chatType,
+        "public_key": public_key,
       };
 }

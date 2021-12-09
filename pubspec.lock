@@ -15,6 +15,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.0"
+  asn1lib:
+    dependency: transitive
+    description:
+      name: asn1lib
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.3"
   async:
     dependency: transitive
     description:
@@ -57,6 +64,20 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.15.0"
+  convert:
+    dependency: transitive
+    description:
+      name: convert
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.1"
+  crypton:
+    dependency: "direct main"
+    description:
+      name: crypton
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.3"
   cupertino_icons:
     dependency: "direct main"
     description:
@@ -130,6 +151,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  js:
+    dependency: transitive
+    description:
+      name: js
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.6.3"
   lints:
     dependency: transitive
     description:
@@ -242,6 +270,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.2"
+  pointycastle:
+    dependency: transitive
+    description:
+      name: pointycastle
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.4.0"
   process:
     dependency: transitive
     description:

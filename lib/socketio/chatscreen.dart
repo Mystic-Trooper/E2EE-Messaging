@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'package:e2ee_messaging/EncyptioCode/rsa_brain.dart';
 import 'package:e2ee_messaging/socketio/ChatBubble.dart';
 import 'package:e2ee_messaging/socketio/ChatMessageModel.dart';
 import 'package:e2ee_messaging/socketio/ChatTitle.dart';
@@ -27,6 +27,7 @@ class ChatScreenState extends State<ChatScreen> {
   User _chatUser;
   ScrollController _chatLVController;
   UserOnlineStatus _userOnlineStatus;
+  var rsaBrain = RSABrain();
 
   @override
   void initState() {
@@ -50,6 +51,7 @@ class ChatScreenState extends State<ChatScreen> {
     ChatMessageModel chatMessageModel = ChatMessageModel(
       to: G.toChatUser.id,
       from: G.loggedInUser.id,
+      message: rsaBrain.getOwnPublicKey(),
     );
     G.socketUtils.checkOnline(chatMessageModel);
   }
@@ -158,17 +160,33 @@ class ChatScreenState extends State<ChatScreen> {
     if (_chatTfController.text.isEmpty) {
       return;
     }
+    // perform encryption here
+    String encryptedMessage =
+        rsaBrain.encryptTheSetterMessage(_chatTfController.text);
+
     ChatMessageModel chatMessageModel = ChatMessageModel(
       chatId: 0,
       to: _chatUser.id,
       from: G.loggedInUser.id,
       toUserOnlineStatus: false,
       message: _chatTfController.text,
+      public_key: rsaBrain.getOwnPublicKey(),
       chatType: SocketUtils.SINGLE_CHAT,
     );
     _addMessage(0, chatMessageModel, _isFromMe(G.loggedInUser));
     _clearMessage();
-    G.socketUtils.sendSingleChatMessage(chatMessageModel, _chatUser);
+
+    // send encrypted message to the other user
+    ChatMessageModel encryptedChatMessageModel = ChatMessageModel(
+      chatId: 0,
+      to: _chatUser.id,
+      from: G.loggedInUser.id,
+      toUserOnlineStatus: false,
+      message: encryptedMessage,
+      public_key: rsaBrain.getOwnPublicKey(),
+      chatType: SocketUtils.SINGLE_CHAT,
+    );
+    G.socketUtils.sendSingleChatMessage(encryptedChatMessageModel, _chatUser);
   }
 
   _clearMessage() {
@@ -195,7 +213,6 @@ class ChatScreenState extends State<ChatScreen> {
     EdgeInsets margins = fromMe
         ? EdgeInsets.fromLTRB(80, 5, 10, 5)
         : EdgeInsets.fromLTRB(10, 5, 80, 5);
-
     return Container(
       color: Colors.white,
       margin: margins,
@@ -215,7 +232,7 @@ class ChatScreenState extends State<ChatScreen> {
                     Padding(
                       padding: edgeInsets,
                       child: Text(
-                        chatMessageModel.message,
+                        chatMessageModel.message ?? "",
                         style: textStyle,
                       ),
                     ),
@@ -235,6 +252,9 @@ class ChatScreenState extends State<ChatScreen> {
       return;
     }
     ChatMessageModel chatMessageModel = ChatMessageModel.fromJson(data);
+    print("Message back from server");
+    print(chatMessageModel.message);
+    rsaBrain.setReceiverPublicKey(chatMessageModel.public_key);
     bool online = chatMessageModel.toUserOnlineStatus;
     _updateToUserOnlineStatusInUI(online);
     processMessage(chatMessageModel);
@@ -263,6 +283,8 @@ class ChatScreenState extends State<ChatScreen> {
   }
 
   processMessage(ChatMessageModel chatMessageModel) {
+    chatMessageModel.message =
+        rsaBrain.decryptTheGetterMessage(chatMessageModel.message);
     _addMessage(0, chatMessageModel, false);
   }
 
@@ -271,6 +293,7 @@ class ChatScreenState extends State<ChatScreen> {
     setState(() {
       _chatMessages.add(chatMessageModel);
     });
+
     print('Total Messages: ${_chatMessages.length}');
     _chatListScrollToBottom();
   }
